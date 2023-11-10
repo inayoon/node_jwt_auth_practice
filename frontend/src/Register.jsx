@@ -74,7 +74,6 @@ export default function Register() {
           <button type="submit" className="btn btn-success w-100 rounded-0">
             Sign up
           </button>
-          <p>You agree to our terms and policy</p>
           <Link
             to="/login"
             className="btn btn-default border w-100 bg-light rounded-0 text-decoration-none"

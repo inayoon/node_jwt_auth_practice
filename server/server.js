@@ -9,7 +9,13 @@ const salt = 10;
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 const db = mysql2.createConnection({
@@ -42,6 +48,11 @@ app.post("/login", (req, res) => {
         (err, response) => {
           if (err) return res.json({ Error: "Password mismatch" });
           if (response) {
+            const name = data[0].name;
+            const token = jwt.sign({ name }, "jwt-secret-key", {
+              expiresIn: "1d",
+            });
+            res.cookie("token", token);
             return res.json({ Status: "Success" });
           } else {
             return res.json({ Error: "Password mismatch" });

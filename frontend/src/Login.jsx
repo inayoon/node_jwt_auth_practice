@@ -8,6 +8,7 @@ export default function Login() {
     password: "",
   });
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
@@ -16,7 +17,7 @@ export default function Login() {
         if (res.data.Status === "Success") {
           navigate("/");
         } else {
-          alert("Error");
+          alert(res.data.Error);
         }
       })
       .catch((err) => console.log(err));
@@ -60,7 +61,6 @@ export default function Login() {
           <button type="submit" className="btn btn-success w-100 rounded-0">
             Log in
           </button>
-          <p>You agree to our terms and policy</p>
           <Link
             to="/register"
             className="btn btn-default border w-100 bg-light rounded-0 text-decoration-none"
