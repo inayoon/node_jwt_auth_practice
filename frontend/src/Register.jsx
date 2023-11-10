@@ -12,7 +12,7 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:8081/register", values)
+      .post("http://localhost:8800/register", values)
       .then((res) => {
         if (res.data.Status === "Success") {
           navigate("/login");
