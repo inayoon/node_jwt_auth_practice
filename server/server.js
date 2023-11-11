@@ -25,6 +25,26 @@ const db = mysql2.createConnection({
   database: "signup",
 });
 
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json({ Error: "You are not authenticated" });
+  } else {
+    jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+      if (err) {
+        return res.json({ Error: "Token is not correct" });
+      } else {
+        req.name = decoded.name;
+        next();
+      }
+    });
+  }
+};
+
+app.get("/", verifyUser, (req, res) => {
+  return res.json({ Status: "Success", name: req.name });
+});
+
 app.post("/register", (req, res) => {
   const sql = "INSERT INTO login (`name`,`email`,`password`) VALUES (?)";
   bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
@@ -63,6 +83,11 @@ app.post("/login", (req, res) => {
       return res.json({ Error: "No email founded" });
     }
   });
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  return res.json({ Status: "Success" });
 });
 
 app.listen(8800, () => {
